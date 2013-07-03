@@ -1,0 +1,26 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="Base AMI" field="baseami">
+    <f:textbox />
+  </f:entry>
+  <f:entry title="SSH Key Name" field="key">
+    <f:textbox default="mixamo"/>
+  </f:entry>
+  <f:entry title="Security Group" field="secgroup">
+    <f:textbox default="default"/>
+  </f:entry>
+  <f:entry name="iType" title="Instance Type" field="iType">
+    <select name="iType">
+        <option value="t1.micro">Micro</option>
+        <option value="m1.small">Small</option>
+        <option value="m1.medium">Medium</option>
+        <option value="m1.large">large</option>
+    </select>
+  </f:entry>  
+  <f:entry name="region" title="Region" field="region">
+    <select name="region">
+        <option value="ec2.us-west-2.amazonaws.com">US-West-2 (Oregon)</option>
+        <option value="ec2.us-east-1.amazonaws.com">US-East-1 (Northern Virginia)</option>
+        <option value="ec2.us-west-1.amazonaws.com">US-West-1 (Northern California)</option>
+    </select>
+  </f:entry>
+</j:jelly>

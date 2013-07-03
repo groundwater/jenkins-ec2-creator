@@ -1,0 +1,6 @@
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  Boot Amazon EC2 Instance for the purpose of baking AMIs
+</div>
