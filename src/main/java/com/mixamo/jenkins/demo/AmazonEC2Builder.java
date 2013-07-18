@@ -1,12 +1,16 @@
 package com.mixamo.jenkins.demo;
 
+import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.EnvironmentList;
 import hudson.model.AbstractProject;
+import hudson.model.ParametersAction;
+import hudson.scm.SCM;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
 import net.sf.json.JSONObject;
@@ -29,7 +33,9 @@ import javax.servlet.ServletException;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AmazonEC2Builder extends Builder {
 
@@ -109,7 +115,7 @@ public class AmazonEC2Builder extends Builder {
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
 			BuildListener listener) {
-
+		
 		// This is where you 'build' the project.
 		PrintStream logger = listener.getLogger();
 		
@@ -119,10 +125,12 @@ public class AmazonEC2Builder extends Builder {
 		Reservation reservation = ec2Boot(userKey,userSec,logger);
 		
 		String address = "";
+		String ec2id   = "";
 		for( Instance i : reservation.getInstances() ){
 			listener.getLogger().println("InstanceId: " + i.getInstanceId() );
 			listener.getLogger().println("Public DNS: " + i.getPublicDnsName() );
 			address = i.getPublicDnsName();
+			ec2id = i.getInstanceId();
 		}
 		
 		// Write EC2 Instance Address to AWSInfo File 
@@ -130,7 +138,8 @@ public class AmazonEC2Builder extends Builder {
 		FilePath info = new FilePath(build.getWorkspace(), "AWSInfo");
 		
 		try {
-			info.write(address, "utf-8");
+			String out = "ip:" + address + '\n' + "id:" + ec2id; 
+			info.write(out,"utf-8");
 			listener.getLogger().println("Wrote Info to AWSInfo");
 		} catch (IOException e) {
 			return false; 
